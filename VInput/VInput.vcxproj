@@ -86,9 +86,6 @@
   <ItemGroup>
     <ClInclude Include="Api.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="export_libs\Api.h">
-      <FileType>Document</FileType>
-    </ClInclude>
     <ClInclude Include="framework.h" />
     <ClInclude Include="InfHelper.h" />
     <ClInclude Include="LgDevice.h" />
