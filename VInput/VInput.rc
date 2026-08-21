@@ -1,0 +1,117 @@
+﻿// Microsoft Visual C++ generated resource script.
+//
+#pragma code_page(65001)
+
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 中文(简体，中国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RCDATA
+//
+
+
+// logitech
+IDR_LOGI_JOY_BUS_ENUM_CAT             RCDATA                  "drivers\\logitech\\logi_joy_bus_enum.cat"
+
+IDR_LOGI_JOY_BUS_ENUM_INF             RCDATA                  "drivers\\logitech\\logi_joy_bus_enum.inf"
+
+IDR_LOGI_JOY_BUS_ENUM_SYS             RCDATA                  "drivers\\logitech\\logi_joy_bus_enum.sys"
+
+IDR_LOGI_JOY_VIR_HID_CAT              RCDATA                  "drivers\\logitech\\logi_joy_vir_hid.cat"
+
+IDR_LOGI_JOY_VIR_HID_INF              RCDATA                  "drivers\\logitech\\logi_joy_vir_hid.inf"
+
+IDR_LOGI_JOY_VIR_HID_SYS              RCDATA                  "drivers\\logitech\\logi_joy_vir_hid.sys"
+
+IDR_LOGI_JOY_XLCORE_SYS               RCDATA                  "drivers\\logitech\\logi_joy_xlcore.sys"
+
+// razer
+IDR_RZ_COMMON_CAT                     RCDATA                  "drivers\\razer\\rzcommon.cat"
+
+IDR_RZ_COMMON_SYS                     RCDATA                  "drivers\\razer\\RzCommon.sys"
+
+IDR_RZ_COMMON_INF                     RCDATA                  "drivers\\razer\\RzCommonU.inf"
+
+IDR_RZ_DEV_0306_SYS                   RCDATA                  "drivers\\razer\\RzDev_0306.sys"
+
+IDR_RZ_DEV_VBUS_CAT                   RCDATA                  "drivers\\razer\\rzdev_0306_vbus.cat"
+
+IDR_RZ_DEV_VBUS_INF                   RCDATA                  "drivers\\razer\\RzDevU_0306_VBus.inf"
+
+IDR_RZ_DEV_VCON_CAT                   RCDATA                  "drivers\\razer\\rzdev_0306_vcon.cat"
+
+IDR_RZ_DEV_VCON_INF                   RCDATA                  "drivers\\razer\\RzDevU_0306_VCon.inf"
+
+IDR_RZ_DEV_VKBD_CAT                   RCDATA                  "drivers\\razer\\rzdev_0306_vkbd.cat"
+
+IDR_RZ_DEV_VKBD_INF                   RCDATA                  "drivers\\razer\\RzDevU_0306_VKbd.inf"
+
+IDR_RZ_DEV_VMOU_CAT                   RCDATA                  "drivers\\razer\\rzdev_0306_vmou.cat"
+
+IDR_RZ_DEV_VMOU_INF                   RCDATA                  "drivers\\razer\\RzDevU_0306_VMou.inf"
+
+IDR_RZ_DEV_KBD_CAT                   RCDATA                  "drivers\\razer\\rzdev_0306_kbd.cat"
+
+IDR_RZ_DEV_KBD_INF                   RCDATA                  "drivers\\razer\\RzDevU_0306_Kbd.inf"
+
+IDR_RZ_DEV_MOU_CAT                   RCDATA                  "drivers\\razer\\rzdev_0306_mou.cat"
+
+IDR_RZ_DEV_MOU_INF                   RCDATA                  "drivers\\razer\\RzDevU_0306_Mou.inf"
+
+#endif    // 中文(简体，中国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

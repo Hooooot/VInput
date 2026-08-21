@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{08566977-23c8-45e3-b1f6-94b516a09561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{3fded489-53f0-45d7-afda-03fd94c59b42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource\drivers">
+      <UniqueIdentifier>{04147f4a-8eda-4c57-a08f-92490c141482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource\drivers\logitech">
+      <UniqueIdentifier>{1ed8c1c5-c218-4ea2-93d7-111b79551745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource\drivers\razer">
+      <UniqueIdentifier>{7c867ee2-186f-4979-97b7-a80e333f49b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\logitech">
+      <UniqueIdentifier>{fe028003-8f86-4bc1-a7e3-456b07a847a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\razer">
+      <UniqueIdentifier>{e9b8c6f7-eca0-4d10-b2d1-938b65056a3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\helper">
+      <UniqueIdentifier>{515c2bf5-9c00-4b3c-8e66-e8c4bd5fa088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework">
+      <UniqueIdentifier>{abb6e0d5-f2f3-4701-906c-74bf21e20fbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="export_libs">
+      <UniqueIdentifier>{e6ff9b7e-b862-4165-8718-0eb4a8b90f70}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="framework.h">
+      <Filter>src\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>src\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="RzDevice.h">
+      <Filter>src\razer</Filter>
+    </ClInclude>
+    <ClInclude Include="RzDriver.h">
+      <Filter>src\razer</Filter>
+    </ClInclude>
+    <ClInclude Include="LgDevice.h">
+      <Filter>src\logitech</Filter>
+    </ClInclude>
+    <ClInclude Include="LgDriver.h">
+      <Filter>src\logitech</Filter>
+    </ClInclude>
+    <ClInclude Include="InfHelper.h">
+      <Filter>src\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="StopwatchHelper.h">
+      <Filter>src\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="StringHelper.h">
+      <Filter>src\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32Helper.h">
+      <Filter>src\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Api.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>src\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="RzDevice.cpp">
+      <Filter>src\razer</Filter>
+    </ClCompile>
+    <ClCompile Include="RzDriver.cpp">
+      <Filter>src\razer</Filter>
+    </ClCompile>
+    <ClCompile Include="LgDevice.cpp">
+      <Filter>src\logitech</Filter>
+    </ClCompile>
+    <ClCompile Include="LgDriver.cpp">
+      <Filter>src\logitech</Filter>
+    </ClCompile>
+    <ClCompile Include="InfHelper.cpp">
+      <Filter>src\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="StopwatchHelper.cpp">
+      <Filter>src\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="StringHelper.cpp">
+      <Filter>src\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32Helper.cpp">
+      <Filter>src\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Api.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="drivers\logitech\logi_joy_bus_enum.cat">
+      <Filter>resource\drivers\logitech</Filter>
+    </None>
+    <None Include="drivers\logitech\logi_joy_bus_enum.inf">
+      <Filter>resource\drivers\logitech</Filter>
+    </None>
+    <None Include="drivers\logitech\logi_joy_bus_enum.sys">
+      <Filter>resource\drivers\logitech</Filter>
+    </None>
+    <None Include="drivers\logitech\logi_joy_vir_hid.cat">
+      <Filter>resource\drivers\logitech</Filter>
+    </None>
+    <None Include="drivers\logitech\logi_joy_vir_hid.inf">
+      <Filter>resource\drivers\logitech</Filter>
+    </None>
+    <None Include="drivers\logitech\logi_joy_vir_hid.sys">
+      <Filter>resource\drivers\logitech</Filter>
+    </None>
+    <None Include="drivers\logitech\logi_joy_xlcore.sys">
+      <Filter>resource\drivers\logitech</Filter>
+    </None>
+    <None Include="drivers\razer\rzcommon.cat">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\RzCommon.sys">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\RzCommonU.inf">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\RzDev_0306.sys">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\rzdev_0306_kbd.cat">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\rzdev_0306_mou.cat">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\rzdev_0306_vbus.cat">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\rzdev_0306_vcon.cat">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\rzdev_0306_vkbd.cat">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\rzdev_0306_vmou.cat">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\RzDevU_0306_Kbd.inf">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\RzDevU_0306_Mou.inf">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\RzDevU_0306_VBus.inf">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\RzDevU_0306_VCon.inf">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\RzDevU_0306_VKbd.inf">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="drivers\razer\RzDevU_0306_VMou.inf">
+      <Filter>resource\drivers\razer</Filter>
+    </None>
+    <None Include="export_libs\VInput.py">
+      <Filter>export_libs</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="VInput.rc" />
+  </ItemGroup>
+</Project>
