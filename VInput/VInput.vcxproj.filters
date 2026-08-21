@@ -70,6 +70,9 @@
     <ClInclude Include="Common.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="export_libs\Api.h">
+      <Filter>export_libs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

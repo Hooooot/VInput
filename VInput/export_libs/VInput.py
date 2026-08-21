@@ -1,4 +1,4 @@
-# VInput.py - Python 封装库 for VInput.dll
+﻿# VInput.py - Python 封装库 for VInput.dll
 # x64 only
 
 import ctypes
@@ -218,8 +218,8 @@ def _declare_funcs(dll):
 # ---------- 公共 API ----------
 def initialize(driver_path=None):
     """
-    初始化驱动和设备环境。
-    :param driver_path: 驱动文件路径（字符串或 None）。若 None 则使用内置驱动。
+    初始化驱动和设备环境，三个initialize函数只需要调用一个。
+    :param driver_path: 驱动文件路径（字符串或 None）。若 None 则使用内置驱动（推荐）。
     :return: True 表示成功，False 表示失败。
     """
     dll = _load_dll()
@@ -261,7 +261,11 @@ def initialize_logitech(driver_path=None):
     return dll.InitializeLogitech(arg)
 
 def shutdown():
-    """卸载驱动和设备环境（通常不需要显式调用）。"""
+    """
+    卸载驱动和设备环境。
+    建议只在不再使用驱动时调用，否则不建议调用此函数以加速dll initialize()的速度。
+    即使程序退出时不调用此函数也不会发生资源泄露
+    """
     dll = _load_dll()
     _declare_funcs(dll)
     dll.Shutdown()
