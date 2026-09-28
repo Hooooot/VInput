@@ -208,15 +208,15 @@ namespace VInput::Rz {
                 MergeResult(VInput::Inf::InstallInfPackage(mouInfPath_), r);
             if (r.success)
                 MergeResult(VInput::Inf::InstallInfPackage(kbdInfPath_), r);
-            if (r.success)
-                MergeResult(VInput::Inf::InstallInfPackage(vbusInfPath_), r);
-
-            if (!r.success)
-                InternalUninstall(vbusInfPath_, vconInfPath_, vkbdInfPath_, vmouInfPath_, commInfPath_, kbdInfPath_, mouInfPath_);
         }
 
-        if (r.success) {
+        if (r.success)
             MergeResult(VInput::Win32::CreateRootDevice(vbusInfPath_, kRzVirtualBusId.substr(5), kRzVirtualDeviceId), r);
+
+        if (!r.success)
+            InternalUninstall(vbusInfPath_, vconInfPath_, vkbdInfPath_, vmouInfPath_, commInfPath_, kbdInfPath_, mouInfPath_);
+
+        if (r.success) {
             VInput::Stopwatch::Stopwatch stop;
             stop.Start();
             do {

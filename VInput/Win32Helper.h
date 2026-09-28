@@ -43,7 +43,7 @@ namespace VInput::Win32 {
 	static void MakeResult(Win32Result& result, bool success, DWORD error, bool needReboot = false, const std::source_location& loc = std::source_location::current()) {
 		result.success = result.success && success;
 		result.needReboot = result.needReboot || needReboot;
-		if (!success && (result.errorLine == UINT32_MAX)) {
+		if (!success && (result.errorLine == 0)) {
 			result.errorLine = loc.line();
 			result.error = error;
 		}
@@ -52,7 +52,7 @@ namespace VInput::Win32 {
 	static void MergeResult(const Win32Result& input, Win32Result & final) {
 		final.success = final.success && input.success;
 		final.needReboot = final.needReboot || input.needReboot;
-		if (!input.success && (final.errorLine == UINT32_MAX)) {
+		if (!input.success && (final.errorLine == 0)) {
 			final.errorLine = input.errorLine;
 			final.error = input.error;
 		}
@@ -82,12 +82,27 @@ namespace VInput::Win32 {
 	/// <param name="filterInstanceId">可以是ROOT\\DEVICE，也可以是HID的HID\\VID_046D&PID_C231，取决于设备类型</param>
 	/// <returns></returns>
 	bool IsDeviceExists(const std::wstring_view targetHwId, const std::wstring_view filterInstanceId = {});
-	VInput::Win32::Win32Result CreateRootDevice(const std::wstring_view inf, const std::wstring_view rootDeviceId, const std::wstring_view hardwareId);
-	VInput::Win32::Win32Result RemoveRootDevice(const std::wstring_view rootDeviceId);
+
+	/// <summary>
+	/// 创建设备并绑定到inf指定的驱动
+	/// </summary>
+	/// <param name="inf"></param>
+	/// <param name="rootDeviceInstanceId">不得包含ROOT\\，例如原本路径为ROOT\\DEVICE_ID，则应当输入DEVICE_ID</param>
+	/// <param name="rootDeviceHardwareId">inf绑定的硬件ID</param>
+	/// <returns></returns>
+	VInput::Win32::Win32Result CreateRootDevice(const std::wstring_view inf, const std::wstring_view rootDeviceInstanceId, const std::wstring_view rootDeviceHardwareId);
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="rootDeviceInstanceId">需要带ROOT\\，不要带\\000这种序号</param>
+	/// <returns></returns>
+	VInput::Win32::Win32Result RemoveRootDevice(const std::wstring_view rootDeviceInstanceId);
 	bool ScanHardware();
 	VInput::Win32::Win32Result DeleteServiceEntry(const wchar_t* name);
 	VInput::Win32::Win32Result DeleteRegKey(HKEY root, std::wstring_view parentKeyPath, std::wstring_view deletedKeyName, REGSAM view = KEY_WOW64_64KEY);
 	VInput::Win32::Win32Result DeleteRegKey(HKEY root, const std::wstring& subkey, REGSAM view = KEY_WOW64_64KEY);
+	VInput::Win32::Win32Result AddRegKeyDWORD(HKEY root, std::wstring_view parentKeyPath, std::wstring_view dwordName, UINT32 dwordData, REGSAM view = KEY_WOW64_64KEY);
+
 #pragma pack(push, 4)
 	struct MouseAcceleration
 	{

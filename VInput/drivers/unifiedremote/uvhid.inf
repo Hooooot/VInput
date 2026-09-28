@@ -1,0 +1,87 @@
+;/*++
+;
+;Copyright (c) Microsoft Corporation All rights Reserved
+;
+;Module Name:
+;
+;    vihidmini.inf
+;
+;Abstract:
+;    INF file for installing HID minidriver (KMDF version)
+;
+;Installation Notes:
+;    Using Devcon: Type "devcon install uvhid.inf HID\uvhid" to install
+;
+;--*/
+[Version]
+Signature="$WINDOWS NT$"
+Class=HIDClass
+ClassGuid={745a17a0-74d3-11d0-b6fe-00a0c90f57da}
+Provider=%ProviderString%
+DriverVer = 11/20/2021,12.57.52.419
+CatalogFile=uvhid.cat
+
+; ================= Device section =====================
+
+[Manufacturer]
+%ManufacturerString%=Microsoft,NTamd64.6.1
+
+; Works on Win7 and later because we use inbox HID-KMDF mapper
+[Microsoft.NTamd64.6.1]
+%DeviceDesc%=uvhid, HID\uvhid
+
+[uvhid.NT]
+CopyFiles=KMDriverCopy
+
+[uvhid.NT.hw]
+AddReg=uvhid_AddReg
+
+[uvhid.NT.Services]
+AddService=uvhid,0,uvhid_Service_Inst,
+AddService=mshidkmdf,0x00000002,mshidkmdf_Service_Inst ;flag 0x2 sets this as the service for the device
+
+[uvhid_AddReg]
+HKR,,"LowerFilters",0x00010008,"uvhid" ; FLG_ADDREG_TYPE_MULTI_SZ | FLG_ADDREG_APPEND
+
+[mshidkmdf_Service_Inst]
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\mshidkmdf.sys
+
+[uvhid_Service_Inst]
+DisplayName    = %ServiceDesc%
+ServiceType    = 1
+StartType      = 3
+ErrorControl   = 1
+ServiceBinary  = %12%\uvhid.sys
+
+[uvhid.NT.Wdf]
+KmdfService=uvhid, uvhid_wdfsect
+
+[uvhid_wdfsect]
+KmdfLibraryVersion=1.15
+
+; ================= copy files =====================
+
+[KMDriverCopy]
+uvhid.sys
+
+[SourceDisksNames]
+1=%DiskDesc%,,,
+
+[SourceDisksFiles]
+uvhid.sys=1
+
+[DestinationDirs]
+KMDriverCopy=12
+
+;---------------------------------------------------------------;
+
+[Strings]
+ProviderString     = "Unified Intents AB"
+ManufacturerString = "Unified Intents AB"
+ClassName          = "Unified Virtual HID"
+DeviceDesc         = "Unified Virtual HID"
+ServiceDesc        = "Unified Virtual HID"
+DiskDesc           = "Unified Virtual HID Install Disk"

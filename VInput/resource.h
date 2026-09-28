@@ -29,6 +29,11 @@
 #define IDR_RZ_DEV_MOU_INF         226
 
 
+#define IDR_UVHID_CAT              301
+#define IDR_UVHID_INF              302
+#define IDR_UVHID_SYS              303
+
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

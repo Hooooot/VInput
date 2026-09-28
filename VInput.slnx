@@ -3,4 +3,5 @@
     <Platform Name="x64" />
   </Configurations>
   <Project Path="VInput/VInput.vcxproj" Id="e0b7fd4b-55bc-4afa-804f-9273e45e47e9" />
+  <Project Path="VInputTests/VInputTests.vcxproj" Id="c8a6758e-9d4e-447a-aaeb-00fa654fd3ed" />
 </Solution>

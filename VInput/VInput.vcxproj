@@ -96,6 +96,8 @@
     <ClInclude Include="RzDriver.h" />
     <ClInclude Include="StopwatchHelper.h" />
     <ClInclude Include="StringHelper.h" />
+    <ClInclude Include="UvDevice.h" />
+    <ClInclude Include="UvDriver.h" />
     <ClInclude Include="Win32Helper.h" />
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +115,8 @@
     <ClCompile Include="RzDriver.cpp" />
     <ClCompile Include="StopwatchHelper.cpp" />
     <ClCompile Include="StringHelper.cpp" />
+    <ClCompile Include="UvDevice.cpp" />
+    <ClCompile Include="UvDriver.cpp" />
     <ClCompile Include="Win32Helper.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +143,9 @@
     <None Include="drivers\razer\rzdev_0306_vcon.cat" />
     <None Include="drivers\razer\rzdev_0306_vkbd.cat" />
     <None Include="drivers\razer\rzdev_0306_vmou.cat" />
+    <None Include="drivers\unifiedremote\uvhid.cat" />
+    <None Include="drivers\unifiedremote\uvhid.inf" />
+    <None Include="drivers\unifiedremote\uvhid.sys" />
     <None Include="export_libs\VInput.py" />
   </ItemGroup>
   <ItemGroup>

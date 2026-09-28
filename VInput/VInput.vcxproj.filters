@@ -31,6 +31,12 @@
     <Filter Include="export_libs">
       <UniqueIdentifier>{e6ff9b7e-b862-4165-8718-0eb4a8b90f70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resource\drivers\unifiedremote">
+      <UniqueIdentifier>{16efc43a-2e70-4bae-bc11-6759eb46d323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\unifiedremote">
+      <UniqueIdentifier>{fbeda5b9-f8df-4201-a70d-4099a40e3bfa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -70,6 +76,12 @@
     <ClInclude Include="Common.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="UvDevice.h">
+      <Filter>src\unifiedremote</Filter>
+    </ClInclude>
+    <ClInclude Include="UvDriver.h">
+      <Filter>src\unifiedremote</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -107,6 +119,12 @@
     </ClCompile>
     <ClCompile Include="Common.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="UvDevice.cpp">
+      <Filter>src\unifiedremote</Filter>
+    </ClCompile>
+    <ClCompile Include="UvDriver.cpp">
+      <Filter>src\unifiedremote</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +199,15 @@
     </None>
     <None Include="export_libs\VInput.py">
       <Filter>export_libs</Filter>
+    </None>
+    <None Include="drivers\unifiedremote\uvhid.cat">
+      <Filter>resource\drivers\unifiedremote</Filter>
+    </None>
+    <None Include="drivers\unifiedremote\uvhid.inf">
+      <Filter>resource\drivers\unifiedremote</Filter>
+    </None>
+    <None Include="drivers\unifiedremote\uvhid.sys">
+      <Filter>resource\drivers\unifiedremote</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

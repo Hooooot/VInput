@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="VInput">
+      <UniqueIdentifier>{8606bc80-815e-4078-8663-667c8c23d907}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="VInputTests.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VInput\Common.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VInput\InfHelper.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VInput\LgDevice.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VInput\LgDriver.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VInput\pch.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VInput\RzDevice.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VInput\RzDriver.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VInput\StopwatchHelper.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VInput\StringHelper.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VInput\UvDevice.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VInput\UvDriver.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VInput\Win32Helper.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\VInput\Common.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\framework.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\InfHelper.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\LgDevice.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\LgDriver.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\pch.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\resource.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\RzDevice.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\RzDriver.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\StopwatchHelper.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\StringHelper.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\UvDevice.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\UvDriver.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\Win32Helper.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\VInput\VInput.rc">
+      <Filter>VInput</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

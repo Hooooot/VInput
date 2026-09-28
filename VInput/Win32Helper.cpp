@@ -551,19 +551,19 @@ namespace VInput::Win32 {
         return false;
     }
 
-    VInput::Win32::Win32Result CreateRootDevice(const std::wstring_view infFullPath, const std::wstring_view rootDeviceId, const std::wstring_view hardwareId)
+    VInput::Win32::Win32Result CreateRootDevice(const std::wstring_view infFullPath, const std::wstring_view rootDeviceInstanceId, const std::wstring_view rootDeviceHardwareId)
     {
         VInput::Win32::Win32Result r;
 
-        if (hardwareId.empty()) {
+        if (rootDeviceHardwareId.empty()) {
             MakeResult(r, false, ERROR_INVALID_PARAMETER);
             return r;
         }
         std::wstring rootId;
-        rootId.reserve(5 + rootDeviceId.size());
+        rootId.reserve(5 + rootDeviceInstanceId.size());
         rootId.append(L"ROOT\\");
-        rootId.append(rootDeviceId);
-        if (IsDeviceExists(hardwareId, rootId))
+        rootId.append(rootDeviceInstanceId);
+        if (IsDeviceExists(rootDeviceHardwareId, rootId))
             return r;
 
         if (!VInput::Win32::IsFileExists(std::wstring{ infFullPath })) {
@@ -589,13 +589,13 @@ namespace VInput::Win32 {
         SP_DEVINFO_DATA data{};
         data.cbSize = sizeof(data);
 
-        if (!SetupDiCreateDeviceInfoW(set.get(), rootDeviceId.data(), &classGuid, nullptr, nullptr, DICD_GENERATE_ID, &data)) {
+        if (!SetupDiCreateDeviceInfoW(set.get(), rootDeviceInstanceId.data(), &classGuid, nullptr, nullptr, DICD_GENERATE_ID, &data)) {
             MakeResult(r, false, GetLastError());
             return r;
         }
 
-        std::vector<wchar_t> multi(hardwareId.size() + 2, L'\0');
-        std::copy(hardwareId.begin(), hardwareId.end(), multi.begin());
+        std::vector<wchar_t> multi(rootDeviceHardwareId.size() + 2, L'\0');
+        std::copy(rootDeviceHardwareId.begin(), rootDeviceHardwareId.end(), multi.begin());
 
         if (!SetupDiSetDeviceRegistryPropertyW(set.get(), &data, SPDRP_HARDWAREID, reinterpret_cast<const BYTE*>(multi.data()),
             static_cast<DWORD>(multi.size() * sizeof(wchar_t)))) {
@@ -609,7 +609,7 @@ namespace VInput::Win32 {
         }
 
         BOOL reboot = FALSE;
-        if (!UpdateDriverForPlugAndPlayDevicesW(nullptr, hardwareId.data(), infFullPath.data(), 0, &reboot)) {
+        if (!UpdateDriverForPlugAndPlayDevicesW(nullptr, rootDeviceHardwareId.data(), infFullPath.data(), 0, &reboot)) {
             const DWORD installError = GetLastError();
             BOOL undoReboot = FALSE;
             DiUninstallDevice(GetDesktopWindow(), set.get(), &data, 0, &undoReboot);
@@ -619,9 +619,9 @@ namespace VInput::Win32 {
         return r;
     }
 
-    VInput::Win32::Win32Result RemoveRootDevice(const std::wstring_view rootDeviceId) {
+    VInput::Win32::Win32Result RemoveRootDevice(const std::wstring_view rootDeviceInstanceId) {
         VInput::Win32::Win32Result r;
-        if (rootDeviceId.empty())
+        if (rootDeviceInstanceId.empty())
             return r;
 
         ULONG listSize = 0;
@@ -639,7 +639,7 @@ namespace VInput::Win32 {
         }
         std::vector<std::wstring_view> instances;
         for (wchar_t* instanceId = buffer.data(); *instanceId; instanceId += wcslen(instanceId) + 1) {
-            if (VInput::String::StartsWithIgnoreCase(instanceId, rootDeviceId))
+            if (VInput::String::StartsWithIgnoreCase(instanceId, rootDeviceInstanceId))
                 instances.push_back(instanceId);
         }
 
@@ -714,6 +714,15 @@ namespace VInput::Win32 {
             if (ssp.dwCurrentState != SERVICE_STOPPED && ssp.dwCurrentState != SERVICE_STOP_PENDING) {
                 SERVICE_STATUS ss{};
                 ControlService(svc.get(), SERVICE_CONTROL_STOP, &ss);
+                for (int i = 0; i < 20; ++i) {
+                    if (!QueryServiceStatusEx(svc.get(), SC_STATUS_PROCESS_INFO, reinterpret_cast<LPBYTE>(&ssp), sizeof(ssp), &needed)) {
+                        break;
+                    }
+                    if (ssp.dwCurrentState == SERVICE_STOPPED) {
+                        break;
+                    }
+                    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+                }
             }
         }
         if (!DeleteService(svc.get())) {
@@ -787,6 +796,38 @@ namespace VInput::Win32 {
         return r;
     }
 
+    VInput::Win32::Win32Result AddRegKeyDWORD(HKEY root, std::wstring_view parentKeyPath, std::wstring_view dwordName, UINT32 dwordData, REGSAM view /* = KEY_WOW64_64KEY */) {
+        VInput::Win32::Win32Result result;
+        auto deleter = [](HKEY key) { if (key) RegCloseKey(key); };
+        using SAFE_HKEY = std::unique_ptr<std::remove_pointer_t<HKEY>, decltype(deleter)>;
+
+        HKEY rawKey = nullptr;
+        LONG status = ERROR_SUCCESS;
+
+        if (parentKeyPath.empty()) {
+            status = RegOpenKeyExW(root, nullptr, 0, KEY_SET_VALUE | view, &rawKey);
+        }
+        else {
+            DWORD disposition = 0;
+            status = RegCreateKeyExW(root, parentKeyPath.data(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE | view, nullptr, &rawKey, &disposition);
+        }
+
+        SAFE_HKEY key(rawKey);
+        if (status != ERROR_SUCCESS) {
+            MakeResult(result, false, static_cast<DWORD>(status));
+            return result;
+        }
+
+        const DWORD data = static_cast<DWORD>(dwordData);
+        status = RegSetValueExW(key.get(), dwordName.data(), 0, REG_DWORD, reinterpret_cast<const BYTE*>(&data), sizeof(data));
+
+        if (status != ERROR_SUCCESS) {
+            MakeResult(result, false, static_cast<DWORD>(status));
+            return result;
+        }
+
+        return result;
+    }
 
     /// <summary>
     /// 控制面板中的“选择指针移动速度”选项， [1, 20], 默认为10

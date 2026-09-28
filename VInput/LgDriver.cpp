@@ -425,21 +425,21 @@ namespace VInput::Lg {
             MergeResult(VInput::Inf::UninstallInfPackage(busInf), r);
 
         if (!r.error && !r.needReboot) {
-            VInput::Win32::DeleteSysFile(L"logi_joy_vir_hid.sys");
             MergeResult(VInput::Win32::DeleteServiceEntry(L"logi_joy_vir_hid"), r);
             MergeResult(VInput::Win32::DeleteServiceEntry(L"logi_joy_bus_enum"), r);
             MergeResult(VInput::Win32::DeleteServiceEntry(L"logi_joy_xlcore"), r);
+            VInput::Win32::DeleteSysFile(L"logi_joy_vir_hid.sys");
             MergeResult(VInput::Win32::DeleteRegKey(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Control\\MediaProperties\\PrivateProperties\\Joystick\\OEM", L"VID_046D&PID_C2AB"), r);
             MergeResult(VInput::Win32::DeleteRegKey(HKEY_CURRENT_USER, L"System\\CurrentControlSet\\Control\\MediaProperties\\PrivateProperties\\DirectInput", L"VID_046D&PID_C232"), r);
             MergeResult(VInput::Win32::DeleteRegKey(HKEY_CURRENT_USER, L"System\\CurrentControlSet\\Control\\MediaProperties\\PrivateProperties\\DirectInput", L"VID_046D&PID_C231"), r);
             MergeResult(VInput::Win32::DeleteRegKey(HKEY_CURRENT_USER, L"System\\CurrentControlSet\\Control\\MediaProperties\\PrivateProperties\\DirectInput", L"VID_046D&PID_C2AB"), r);
         }
 
-        //std::wcout << L"Uninstall Result: " << (r.success ? L"SUCCESS" : L"FAILED")
-        //    << L" , need reboot: " << (r.needReboot ? L"YES" : L"NO")
-        //    << L" , error code: " << r.error
-        //    << L" , error line: " << r.errorLine
-        //    << L"\n";
+        std::wcout << L"Uninstall Result: " << (r.success ? L"SUCCESS" : L"FAILED")
+            << L" , need reboot: " << (r.needReboot ? L"YES" : L"NO")
+            << L" , error code: " << r.error
+            << L" , error line: " << r.errorLine
+            << L"\n";
         return r.error;
     }
 
@@ -507,13 +507,12 @@ namespace VInput::Lg {
             hidInfPath_ = driverDirectory / L"logi_joy_vir_hid.inf";
             if (r.success)
                 MergeResult(VInput::Inf::InstallInfPackage(hidInfPath_), r);
-            if (r.success)
-                MergeResult(VInput::Inf::InstallInfPackage(busInfPath_), r);
-            if (!r.success)
-                InternalUninstall(busInfPath_, hidInfPath_);
         }
         if (r.success)
             MergeResult(VInput::Win32::CreateRootDevice(busInfPath_, kVirtualBusHardwareId.substr(5), kVirtualBusHardwareId), r);
+
+        if (!r.success)
+            InternalUninstall(busInfPath_, hidInfPath_);
 
         if (r.success) {
             HANDLE deviceHandle = OpenDeviceHandle();
@@ -531,16 +530,16 @@ namespace VInput::Lg {
                     break;
             } while (!IsDriverReady());
             stop.Stop();
-            //std::wcout << std::format(L"IsDriverReady 耗时: {:.3f} ms\n", stop.ElapsedMilliseconds());
+            std::wcout << std::format(L"IsDriverReady 耗时: {:.3f} ms\n", stop.ElapsedMilliseconds());
             if (deviceHandle != INVALID_HANDLE_VALUE && deviceHandle != nullptr)
                 CloseHandle(deviceHandle);
         }
 
-        //std::wcout << L"Install Result: " << (r.success ? L"SUCCESS" : L"FAILED")
-        //    << L" , need reboot: " << (r.needReboot ? L"YES" : L"NO")
-        //    << L" , error code: " << r.error
-        //    << L" , error line: " << r.errorLine
-        //    << L"\n";
+        std::wcout << L"Install Result: " << (r.success ? L"SUCCESS" : L"FAILED")
+            << L" , need reboot: " << (r.needReboot ? L"YES" : L"NO")
+            << L" , error code: " << r.error
+            << L" , error line: " << r.errorLine
+            << L"\n";
 
         return r.error;
     }

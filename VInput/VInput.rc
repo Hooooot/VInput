@@ -92,13 +92,21 @@ IDR_RZ_DEV_VMOU_CAT                   RCDATA                  "drivers\\razer\\r
 
 IDR_RZ_DEV_VMOU_INF                   RCDATA                  "drivers\\razer\\RzDevU_0306_VMou.inf"
 
-IDR_RZ_DEV_KBD_CAT                   RCDATA                  "drivers\\razer\\rzdev_0306_kbd.cat"
+IDR_RZ_DEV_KBD_CAT                    RCDATA                  "drivers\\razer\\rzdev_0306_kbd.cat"
 
-IDR_RZ_DEV_KBD_INF                   RCDATA                  "drivers\\razer\\RzDevU_0306_Kbd.inf"
+IDR_RZ_DEV_KBD_INF                    RCDATA                  "drivers\\razer\\RzDevU_0306_Kbd.inf"
 
-IDR_RZ_DEV_MOU_CAT                   RCDATA                  "drivers\\razer\\rzdev_0306_mou.cat"
+IDR_RZ_DEV_MOU_CAT                    RCDATA                  "drivers\\razer\\rzdev_0306_mou.cat"
 
-IDR_RZ_DEV_MOU_INF                   RCDATA                  "drivers\\razer\\RzDevU_0306_Mou.inf"
+IDR_RZ_DEV_MOU_INF                    RCDATA                  "drivers\\razer\\RzDevU_0306_Mou.inf"
+
+// unified remote
+IDR_UVHID_CAT                         RCDATA                  "drivers\\unifiedremote\\uvhid.cat"
+
+IDR_UVHID_INF                         RCDATA                  "drivers\\unifiedremote\\uvhid.inf"
+
+IDR_UVHID_SYS                         RCDATA                  "drivers\\unifiedremote\\uvhid.sys"
+
 
 #endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
