@@ -45,6 +45,40 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
+/////////////////////////////////////////////////////////////////////////////
+//
+// VERSIONINFO
+//
+
+#include <windows.h>
+#include "Version.h"
+#define LANG_EN_US_UNICODE  0x0409, 1200
+#define BLOCK_EN_US_UNICODE "040904B0"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_BUILD
+PRODUCTVERSION  VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_BUILD
+FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+FILEFLAGS       0
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK BLOCK_EN_US_UNICODE
+        BEGIN
+            VALUE "FileVersion", VERSION_STRING
+            VALUE "ProductVersion", VERSION_STRING
+            VALUE "ProductName", "VInput"
+            VALUE "CompanyName", "Hooooot"
+            VALUE "LegalCopyright", "Copyright (C) 2026 Hooooot"
+            VALUE "FileDescription", "Virtual Input Driver Manager"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", LANG_EN_US_UNICODE
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

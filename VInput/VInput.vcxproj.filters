@@ -28,9 +28,6 @@
     <Filter Include="src\framework">
       <UniqueIdentifier>{abb6e0d5-f2f3-4701-906c-74bf21e20fbd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="export_libs">
-      <UniqueIdentifier>{e6ff9b7e-b862-4165-8718-0eb4a8b90f70}</UniqueIdentifier>
-    </Filter>
     <Filter Include="resource\drivers\unifiedremote">
       <UniqueIdentifier>{16efc43a-2e70-4bae-bc11-6759eb46d323}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,9 @@
     </ClInclude>
     <ClInclude Include="UvDriver.h">
       <Filter>src\unifiedremote</Filter>
+    </ClInclude>
+    <ClInclude Include="Version.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -196,9 +196,6 @@
     </None>
     <None Include="drivers\razer\RzDevU_0306_VMou.inf">
       <Filter>resource\drivers\razer</Filter>
-    </None>
-    <None Include="export_libs\VInput.py">
-      <Filter>export_libs</Filter>
     </None>
     <None Include="drivers\unifiedremote\uvhid.cat">
       <Filter>resource\drivers\unifiedremote</Filter>

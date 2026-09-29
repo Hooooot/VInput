@@ -98,6 +98,7 @@
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="UvDevice.h" />
     <ClInclude Include="UvDriver.h" />
+    <ClInclude Include="Version.h" />
     <ClInclude Include="Win32Helper.h" />
   </ItemGroup>
   <ItemGroup>
@@ -146,7 +147,6 @@
     <None Include="drivers\unifiedremote\uvhid.cat" />
     <None Include="drivers\unifiedremote\uvhid.inf" />
     <None Include="drivers\unifiedremote\uvhid.sys" />
-    <None Include="export_libs\VInput.py" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VInput.rc" />

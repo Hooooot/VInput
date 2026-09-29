@@ -103,6 +103,9 @@
     <ClInclude Include="..\VInput\Api.h">
       <Filter>VInput</Filter>
     </ClInclude>
+    <ClInclude Include="..\VInput\Version.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\VInput\VInput.rc">
