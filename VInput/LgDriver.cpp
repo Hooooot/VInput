@@ -1,13 +1,11 @@
 ﻿#include "pch.h"
 #include "LgDriver.h"
+#include "LgDevice.h"
 #include "resource.h"
 #include "StringHelper.h"
 #include "StopwatchHelper.h"
 
 namespace VInput::Lg {
-
-    DEFINE_GUID(GUID_LGHUB_XLCORE_INTERFACE, 0x1ABC05C0, 0xC378, 0x41B9, 0x9C, 0xEF, 0xDF, 0x1A, 0xBA, 0x82, 0xB0, 0x15);
-
     constexpr std::wstring_view kVirtualBusHardwareId       = L"ROOT\\LGHUBVirtualBus";
     constexpr std::wstring_view kVirtualDeviceHardwareId    = L"LGHUBDevice\\LGHUBVirtualDevice";
     constexpr std::wstring_view kVirtualJoystickHardwareId  = L"LGHUBDevice\\VID_046D&PID_C2AB";
@@ -66,42 +64,7 @@ namespace VInput::Lg {
         std::uint32_t reserved0;
         std::uint32_t reserved1;
     };
-
-    struct MouseInputReport
-    {
-        std::uint8_t buttons;
-        std::int8_t x;
-        std::int8_t y;
-        std::int8_t wheel;
-        std::int8_t horizontalWheel;
-    };
-
-    struct KeyboardInputReport {
-        uint8_t modifiers;  // byte 0: LCTRL=1, LSHIFT=2, LALT=4, LWIN=8,
-        // RCTRL=16, RSHIFT=32, RALT=64, RWIN=128
-        uint8_t reserved;   // byte 1: always 0 (HID spec)
-        uint8_t key0;       // bytes 2..7: HID Usage id (a=0x04, ..., f1=0x3A, ...)
-        uint8_t key1;		// see HID Keyboard/KeypadPage(0x07)
-        uint8_t key2;
-        uint8_t key3;
-        uint8_t key4;
-        uint8_t key5;
-    };
-
 #pragma pack(pop)
-
-    enum class MouseButton : std::uint8_t
-    {
-        None = 0x00,
-        Left = 0x01,
-        Right = 0x02,
-        Middle = 0x04,
-        X1 = 0x08,
-        X2 = 0x10,
-        Button6 = 0x20,
-        Button7 = 0x40,
-        Button8 = 0x80
-    };
 
     constexpr std::array<std::uint8_t, 63> kKeyboardReportDescriptor =
     {
@@ -339,15 +302,13 @@ namespace VInput::Lg {
     }
 
     static HANDLE OpenDeviceHandle() {
-        const std::vector<std::wstring> paths = VInput::Win32::GetDeviceInterfacePaths(GUID_LGHUB_XLCORE_INTERFACE);
-        if (paths.empty())
+        std::wstring path = VInput::Win32::GetDeviceInterfacePath(GUID_LGHUB_XLCORE_INTERFACE, XLCORE_INTERFACE_PATH);
+        if (path.empty())
             return INVALID_HANDLE_VALUE;
 
-        for (const std::wstring& path : paths) {
-            HANDLE handle = CreateFileW(path.c_str(), GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-            if (handle != INVALID_HANDLE_VALUE)
-                return handle;
-        }
+        HANDLE handle = CreateFileW(path.c_str(), GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+        if (handle != INVALID_HANDLE_VALUE)
+            return handle;
 
         return INVALID_HANDLE_VALUE;
     }
@@ -397,12 +358,10 @@ namespace VInput::Lg {
     {
         VInput::Win32::Win32Result r;
         if (r.success) {
-            HANDLE deviceHandle = OpenDeviceHandle();
-            if (deviceHandle != INVALID_HANDLE_VALUE) {
-                r.success = UnplugVirtualDevice(deviceHandle, VirtualDeviceType::Keyboard, nullptr);
-                r.success = UnplugVirtualDevice(deviceHandle, VirtualDeviceType::Mouse, nullptr);
-                CloseHandle(deviceHandle);
-
+            auto deviceHandle = VInput::Win32::SafePtr<HANDLE, CloseHandle>{ OpenDeviceHandle() };
+            if (deviceHandle) {
+                r.success = UnplugVirtualDevice(deviceHandle.get(), VirtualDeviceType::Keyboard, nullptr);
+                r.success = UnplugVirtualDevice(deviceHandle.get(), VirtualDeviceType::Mouse, nullptr);
                 VInput::Stopwatch::Stopwatch stop;
                 stop.Start();
                 do {
@@ -515,13 +474,13 @@ namespace VInput::Lg {
             InternalUninstall(busInfPath_, hidInfPath_);
 
         if (r.success) {
-            HANDLE deviceHandle = OpenDeviceHandle();
-            if (deviceHandle == INVALID_HANDLE_VALUE)
+            auto deviceHandle = VInput::Win32::SafePtr<HANDLE, CloseHandle>{ OpenDeviceHandle() };
+            if (!deviceHandle)
                 VInput::Win32::MakeResult(r, false, 1, false);
             if (r.success)
-                r.success = PlugVirtualDevice(deviceHandle, VirtualDeviceType::Keyboard, nullptr);
+                r.success = PlugVirtualDevice(deviceHandle.get(), VirtualDeviceType::Keyboard, nullptr);
             if (r.success)
-                r.success = PlugVirtualDevice(deviceHandle, VirtualDeviceType::Mouse, nullptr);
+                r.success = PlugVirtualDevice(deviceHandle.get(), VirtualDeviceType::Mouse, nullptr);
             VInput::Stopwatch::Stopwatch stop;
             stop.Start();
             do {
@@ -531,8 +490,6 @@ namespace VInput::Lg {
             } while (!IsDriverReady());
             stop.Stop();
             std::wcout << std::format(L"IsDriverReady 耗时: {:.3f} ms\n", stop.ElapsedMilliseconds());
-            if (deviceHandle != INVALID_HANDLE_VALUE && deviceHandle != nullptr)
-                CloseHandle(deviceHandle);
         }
 
         std::wcout << L"Install Result: " << (r.success ? L"SUCCESS" : L"FAILED")

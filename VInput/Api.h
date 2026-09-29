@@ -156,7 +156,9 @@ Keyboard event
 #define STDCALL             __stdcall
 #endif
 
+#ifndef DLLAPI
 #define DLLAPI              __declspec(dllexport)
+#endif
 
 #ifndef FALSE
 #define FALSE               0
@@ -190,6 +192,7 @@ extern "C" {
     DLLAPI BOOL STDCALL Initialize(UTF8_STRING driverPath);
     DLLAPI BOOL STDCALL InitializeRazer(UTF8_STRING driverPath);
     DLLAPI BOOL STDCALL InitializeLogitech(UTF8_STRING driverPath);
+    DLLAPI BOOL STDCALL InitializeUvhid(UTF8_STRING driverPath);
 
     DLLAPI BOOL STDCALL MouseMove(INT32 dx, INT32 dy);
     DLLAPI BOOL STDCALL MouseMoveTo(INT32 x, INT32 y);

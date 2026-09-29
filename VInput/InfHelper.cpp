@@ -23,63 +23,17 @@
 #pragma comment(lib, "Newdev.lib")
 
 namespace VInput::Inf {
-    class InfHandle
-    {
-    private:
-        HINF handle_ = INVALID_HANDLE_VALUE;
-
-        HINF Release() noexcept {
-            const HINF oldHandle = handle_;
-            handle_ = INVALID_HANDLE_VALUE;
-            return oldHandle;
-        }
-
-    public:
-        explicit InfHandle(HINF handle = INVALID_HANDLE_VALUE) noexcept : handle_(handle) {}
-
-        ~InfHandle() { reset(); }
-
-        InfHandle(const InfHandle&) = delete;
-        InfHandle& operator=(const InfHandle&) = delete;
-
-        InfHandle(InfHandle&& other) noexcept : handle_(other.Release()) {}
-
-        InfHandle& operator=(InfHandle&& other) noexcept {
-            if (this != &other)
-                reset(other.Release());
-            return *this;
-        }
-
-        bool valid() const noexcept {
-            return handle_ != INVALID_HANDLE_VALUE;
-        }
-
-        HINF get() const noexcept {
-            return handle_;
-        }
-
-        void reset(HINF newHandle = INVALID_HANDLE_VALUE) noexcept {
-            if (handle_ != INVALID_HANDLE_VALUE)
-                SetupCloseInfFile(handle_);
-            handle_ = newHandle;
-        }
-    };
-
     static std::vector<std::wstring> EnumeratePublishedInfs(const std::filesystem::path& infDirectory) {
         const std::wstring searchPattern = infDirectory.native() + L"\\oem*.inf"; // C:\Windows\INF
         WIN32_FIND_DATAW findData{};
-        InfHandle fileHandle(FindFirstFileExW(searchPattern.c_str(), FindExInfoBasic, &findData, FindExSearchNameMatch, nullptr, FIND_FIRST_EX_LARGE_FETCH));
-        if (!fileHandle.valid()) {
-            const DWORD error = GetLastError();
-            if (error == ERROR_FILE_NOT_FOUND) {
-                return {};
-            }
-        }
+        auto fileHandle = VInput::Win32::SafePtr<HANDLE, FindClose>{ FindFirstFileExW(searchPattern.c_str(), FindExInfoBasic, &findData, FindExSearchNameMatch, nullptr, FIND_FIRST_EX_LARGE_FETCH) };
+        if (!fileHandle)
+            return {};
+
         std::vector<std::wstring> result;
         do {
-            if ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
-                continue;
-            result.push_back(findData.cFileName);
+            if ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
+                result.push_back(findData.cFileName);
         } while (FindNextFileW(fileHandle.get(), &findData));
         return result;
     }
@@ -124,41 +78,39 @@ namespace VInput::Inf {
             return {};
 
         DriverPackageVersion version;
+        std::vector<wchar_t> keyBuffer(static_cast<std::size_t>(MAX_PATH) + 1, L'\0');
+        std::vector<wchar_t> valueBuffer(static_cast<std::size_t>(MAX_PATH) + 1, L'\0');
+
+
         do {
-            std::vector<wchar_t> keyBuffer(static_cast<std::size_t>(MAX_PATH) + 1, L'\0');
             if (GetInfStringField(context, 0, keyBuffer) != 0) {
                 std::wstring key(keyBuffer.data());
 
                 if (VInput::String::EqualsIgnoreCase(key, L"Class")) {
-                    std::vector<wchar_t> valueBuffer(static_cast<std::size_t>(MAX_PATH) + 1, L'\0');
                     if (GetInfStringField(context, 1, valueBuffer) != 0) {
                         std::wstring value(valueBuffer.data());
                         version.className = value;
                     }
                 }
                 else if (VInput::String::EqualsIgnoreCase(key, L"Provider")) {
-                    std::vector<wchar_t> valueBuffer(static_cast<std::size_t>(MAX_PATH) + 1, L'\0');
                     if (GetInfStringField(context, 1, valueBuffer) != 0) {
                         std::wstring value(valueBuffer.data());
                         version.provider = value;
                     }
                 }
                 else if (VInput::String::EqualsIgnoreCase(key, L"ClassGuid")) {
-                    std::vector<wchar_t> valueBuffer(static_cast<std::size_t>(MAX_PATH) + 1, L'\0');
                     if (GetInfStringField(context, 1, valueBuffer) != 0) {
                         std::wstring value(valueBuffer.data());
                         version.classGuid = value;
                     }
                 }
                 else if (VInput::String::EqualsIgnoreCase(key, L"CatalogFile")) {
-                    std::vector<wchar_t> valueBuffer(static_cast<std::size_t>(MAX_PATH) + 1, L'\0');
                     if (GetInfStringField(context, 1, valueBuffer) != 0) {
                         std::wstring value(valueBuffer.data());
                         version.catalogFile = value;
                     }
                 }
                 else if (VInput::String::EqualsIgnoreCase(key, L"DriverVer")) {
-                    std::vector<wchar_t> valueBuffer(static_cast<std::size_t>(MAX_PATH) + 1, L'\0');
                     if (GetInfStringField(context, 1, valueBuffer) != 0) {
                         std::wstring value(valueBuffer.data());
                         version.driverVersion = value;
@@ -170,6 +122,8 @@ namespace VInput::Inf {
                     }
                 }
             }
+            std::fill(keyBuffer.begin(), keyBuffer.end(), L'\0');
+            std::fill(valueBuffer.begin(), valueBuffer.end(), L'\0');
         } while (SetupFindNextLine(&context, &context));
         return version;
     }
@@ -186,8 +140,8 @@ namespace VInput::Inf {
         }
 
         UINT errorLine = 0;
-        InfHandle infHandle(SetupOpenInfFileW(package.publishedInfPath.c_str(), nullptr, INF_STYLE_WIN4, &errorLine));
-        if (!infHandle.valid())
+        auto infHandle = VInput::Win32::SafePtr<HINF, SetupCloseInfFile>(SetupOpenInfFileW(package.publishedInfPath.c_str(), nullptr, INF_STYLE_WIN4, &errorLine));
+        if (!infHandle)
             return std::nullopt;
 
         package.version = GetInfVersionField(infHandle.get());
@@ -200,8 +154,8 @@ namespace VInput::Inf {
         package.publishedInfPath = infDirectory / infName;
 
         UINT errorLine = 0;
-        InfHandle infHandle(SetupOpenInfFileW(package.publishedInfPath.c_str(), nullptr, INF_STYLE_WIN4, &errorLine));
-        if (!infHandle.valid())
+        auto infHandle = VInput::Win32::SafePtr<HINF, SetupCloseInfFile>(SetupOpenInfFileW(package.publishedInfPath.c_str(), nullptr, INF_STYLE_WIN4, &errorLine));
+        if (!infHandle)
             return std::nullopt;
 
         package.version = GetInfVersionField(infHandle.get());

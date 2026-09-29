@@ -5,6 +5,8 @@
 #include "LgDriver.h"
 #include "RzDevice.h"
 #include "RzDriver.h"
+#include "UvDevice.h"
+#include "UvDriver.h"
 
 class Manager {
 private:
@@ -21,29 +23,16 @@ public:
             driver_ = nullptr;
     }
 
-    BOOL InitializeLogitech(UTF8_STRING driverPath) noexcept {
+    template <typename TDriver, typename TDevice>
+        requires std::derived_from<TDriver, VInput::IDriver>
+                 && std::derived_from<TDevice, VInput::AbsDevice>
+    BOOL InitializeDevice(UTF8_STRING driverPath) noexcept {
         try {
             if (driver_ == nullptr) {
                 device_ = nullptr;
-                driver_ = std::make_unique<VInput::Lg::LgDriver>();
+                driver_ = std::make_unique<TDriver>();
                 if (driver_->Install(driverPath) == 0) {
-                    device_ = std::make_unique<VInput::Lg::LgDevice>();
-                    return device_->Initialize();
-                }
-                driver_ = nullptr;
-            }
-        }
-        catch (...) {}
-        return false;
-    }
-
-    BOOL InitializeRazer(UTF8_STRING driverPath) noexcept {
-        try {
-            if (driver_ == nullptr) {
-                device_ = nullptr;
-                driver_ = std::make_unique<VInput::Rz::RzDriver>();
-                if (driver_->Install(driverPath) == 0) {
-                    device_ = std::make_unique<VInput::Rz::RzDevice>();
+                    device_ = std::make_unique<TDevice>();
                     return device_->Initialize();
                 }
                 driver_ = nullptr;
@@ -88,10 +77,13 @@ static Manager manager{};
 
 DLLAPI BOOL STDCALL Initialize(UTF8_STRING driverPath)
 {
-    if (manager.InitializeLogitech(driverPath))
+    if (manager.InitializeDevice<VInput::Lg::LgDriver, VInput::Lg::LgDevice>(driverPath))
         return true;
 
-    else if (manager.InitializeRazer(driverPath))
+    else if (manager.InitializeDevice<VInput::Rz::RzDriver, VInput::Rz::RzDevice>(driverPath))
+        return true;
+
+    else if (manager.InitializeDevice<VInput::Uv::UvDriver, VInput::Uv::UvDevice>(driverPath))
         return true;
 
 	return false;
@@ -99,12 +91,17 @@ DLLAPI BOOL STDCALL Initialize(UTF8_STRING driverPath)
 
 DLLAPI BOOL STDCALL InitializeRazer(UTF8_STRING driverPath)
 {
-    return manager.InitializeRazer(driverPath);
+    return manager.InitializeDevice<VInput::Lg::LgDriver, VInput::Lg::LgDevice>(driverPath);
 }
 
 DLLAPI BOOL STDCALL InitializeLogitech(UTF8_STRING driverPath)
 {
-    return manager.InitializeLogitech(driverPath);
+    return manager.InitializeDevice<VInput::Rz::RzDriver, VInput::Rz::RzDevice>(driverPath);
+}
+
+DLLAPI BOOL STDCALL InitializeUvhid(UTF8_STRING driverPath)
+{
+    return manager.InitializeDevice<VInput::Uv::UvDriver, VInput::Uv::UvDevice>(driverPath);
 }
 
 DLLAPI BOOL STDCALL MouseMove(INT32 dx, INT32 dy)

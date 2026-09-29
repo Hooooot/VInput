@@ -35,6 +35,9 @@ namespace VInput::String {
         if (left.size() != right.size())
             return false;
 
+        if (left.empty())
+            return right.empty();
+
         if (left.size() > static_cast<std::size_t>(INT_MAX) ||
             right.size() > static_cast<std::size_t>(INT_MAX))
             return false;
@@ -49,19 +52,22 @@ namespace VInput::String {
     }
 
     void ConvertUTF8ToUTF16(std::string_view utf8, std::wstring& utf16) {
-        if (utf8.empty()) {
-            utf16.clear();
+        utf16.clear();
+        if (utf8.empty())
             return;
-        }
+        if (utf8.size() > static_cast<size_t>(INT_MAX))
+            return;
 
-        const int wideLen = MultiByteToWideChar(CP_UTF8, 0, utf8.data(), static_cast<int>(utf8.size()), nullptr, 0);
-        if (wideLen <= 0) {
-            utf16.clear();
+        const int wideLen = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+            utf8.data(), static_cast<int>(utf8.size()), nullptr, 0);
+        if (wideLen <= 0)
             return;
-        }
 
         utf16.resize(wideLen);
-        MultiByteToWideChar(CP_UTF8, 0, utf8.data(), static_cast<int>(utf8.size()), utf16.data(), wideLen);
+        const int written = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+            utf8.data(), static_cast<int>(utf8.size()), utf16.data(), wideLen);
+        if (written != wideLen)
+            utf16.clear();
     }
 
     bool StartsWithIgnoreCase(std::wstring_view value, std::wstring_view prefix) {

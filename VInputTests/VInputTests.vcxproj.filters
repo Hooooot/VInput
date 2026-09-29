@@ -53,6 +53,9 @@
     <ClCompile Include="..\VInput\Win32Helper.cpp">
       <Filter>VInput</Filter>
     </ClCompile>
+    <ClCompile Include="..\VInput\Api.cpp">
+      <Filter>VInput</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\VInput\Common.h">
@@ -95,6 +98,9 @@
       <Filter>VInput</Filter>
     </ClInclude>
     <ClInclude Include="..\VInput\Win32Helper.h">
+      <Filter>VInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VInput\Api.h">
       <Filter>VInput</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,6 +6,10 @@
 #include <mutex>
 
 namespace VInput::Lg {
+
+	DEFINE_GUID(GUID_LGHUB_XLCORE_INTERFACE, 0x1ABC05C0, 0xC378, 0x41B9, 0x9C, 0xEF, 0xDF, 0x1A, 0xBA, 0x82, 0xB0, 0x15);
+	constexpr std::wstring_view XLCORE_INTERFACE_PATH = L"\\\\?\\root#lghubvirtualbus";
+
 	class LgDevice : public VInput::AbsDevice {
 
 	public:

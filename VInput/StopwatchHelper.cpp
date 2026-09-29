@@ -64,14 +64,17 @@ namespace VInput::Stopwatch {
     }
 
     double Stopwatch::ElapsedMilliseconds() const noexcept {
+        if (m_frequency == 0) return 0.0;
         return (static_cast<double>(GetElapsedTicks()) / m_frequency) * 1000.0;
     }
 
     double Stopwatch::ElapsedMicroseconds() const noexcept {
+        if (m_frequency == 0) return 0.0;
         return (static_cast<double>(GetElapsedTicks()) / m_frequency) * 1'000'000.0;
     }
 
     double Stopwatch::ElapsedNanoseconds() const noexcept {
+        if (m_frequency == 0) return 0.0;
         return (static_cast<double>(GetElapsedTicks()) / m_frequency) * 1'000'000'000.0;
     }
 

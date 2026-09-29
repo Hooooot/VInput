@@ -1,111 +1,57 @@
 ﻿// VInputTests.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
+#define DLLAPI
 
 #include <iostream>
 #include <windows.h>
+#include <devpkey.h>
+#include <initguid.h>
 #include <hidsdi.h>
 #include <setupapi.h>
 #include <stdio.h>
 
+#include "Api.h"
 #include "LgDriver.h"
+#include "LgDevice.h"
 #include "UvDriver.h"
+#include "UvDevice.h"
 #include "RzDriver.h"
+#include "RzDevice.h"
+
 #include "StopwatchHelper.h"
 #pragma comment(lib, "hid.lib")
 #pragma comment(lib, "setupapi.lib")
 
-#define UVHID_VID       0x9512
-#define UVHID_PID       0x9512
-#define UVHID_BUF_SIZE  65 
-
-
-HANDLE OpenUvhidDevice() {
-    GUID hidGuid;
-    HidD_GetHidGuid(&hidGuid);
-    HDEVINFO devInfo = SetupDiGetClassDevs(
-        &hidGuid, NULL, NULL, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
-    if (devInfo == INVALID_HANDLE_VALUE) return INVALID_HANDLE_VALUE;
-
-    SP_DEVICE_INTERFACE_DATA iface = { sizeof(iface) };
-    for (DWORD i = 0;
-        SetupDiEnumDeviceInterfaces(devInfo, NULL, &hidGuid, i, &iface);
-        i++)
-    {
-        DWORD needed = 0;
-        SetupDiGetDeviceInterfaceDetail(devInfo, &iface, NULL, 0, &needed, NULL);
-        auto* det = (PSP_DEVICE_INTERFACE_DETAIL_DATA)malloc(needed);
-        if (!det) continue;
-        det->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
-        if (!SetupDiGetDeviceInterfaceDetail(devInfo, &iface, det, needed, NULL, NULL)) {
-            free(det); continue;
-        }
-        HANDLE h = CreateFile(det->DevicePath,
-            GENERIC_READ | GENERIC_WRITE,
-            FILE_SHARE_READ | FILE_SHARE_WRITE,
-            NULL, OPEN_EXISTING, 0, NULL);
-        free(det);
-        if (h == INVALID_HANDLE_VALUE) continue;
-
-        HIDD_ATTRIBUTES a = { sizeof(a) };
-        if (HidD_GetAttributes(h, &a)
-            && a.VendorID == UVHID_VID
-            && a.ProductID == UVHID_PID) {
-            printf("Opened uvhid \n");
-            SetupDiDestroyDeviceInfoList(devInfo);
-            return h;
-        }
-        CloseHandle(h);
-    }
-    SetupDiDestroyDeviceInfoList(devInfo);
-    return INVALID_HANDLE_VALUE;
-}
-
-
-int main()
+int wmain()
 {
     VInput::Win32::EnableUtf16Output();
     VInput::Stopwatch::Stopwatch stopwatch;
-    
-    
-    
-    //VInput::Lg::LgDriver driver;
-    //stopwatch.Start();
-    //driver.Install(nullptr);
-    //stopwatch.Stop();
-    //std::wcout << std::format(L"Install: {:.3f}ms\n", stopwatch.ElapsedMilliseconds());
 
-    //stopwatch.Restart();
-    //driver.Uninstall();
-    //stopwatch.Stop();
-    //std::wcout << std::format(L"Uninstall: {:.3f}ms\n", stopwatch.ElapsedMilliseconds());
+    //VInput::Lg::LgDriver driver;
+    //VInput::Lg::LgDevice device;
 
     VInput::Rz::RzDriver driver;
+    VInput::Rz::RzDevice device;
+
+    //VInput::Uv::UvDriver driver;
+    //VInput::Uv::UvDevice device;
+
     stopwatch.Start();
     driver.Install(nullptr);
     stopwatch.Stop();
     std::wcout << std::format(L"Install: {:.3f}ms\n", stopwatch.ElapsedMilliseconds());
 
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    device.Initialize();
+    device.KeyboardClick(VK_NUMPAD1);
+    device.MouseMoveTo(100, 100);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    device.Shutdown();
+
     stopwatch.Restart();
     driver.Uninstall();
     stopwatch.Stop();
     std::wcout << std::format(L"Uninstall: {:.3f}ms\n", stopwatch.ElapsedMilliseconds());
-
-
-    //VInput::Uv::UvDriver driver;
-    //stopwatch.Start();
-    //driver.Install(nullptr);
-    //stopwatch.Stop();
-    //std::wcout << std::format(L"Install: {:.3f}ms\n", stopwatch.ElapsedMilliseconds());
-
-    //stopwatch.Restart();
-    //driver.Uninstall();
-    //stopwatch.Stop();
-    //std::wcout << std::format(L"Uninstall: {:.3f}ms\n", stopwatch.ElapsedMilliseconds());
-
-
-
-    //HANDLE hDev = OpenUvhidDevice();
-    //CloseHandle(hDev);
 
     return 0;
 }

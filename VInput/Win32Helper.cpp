@@ -36,7 +36,8 @@ namespace VInput::Win32 {
         }
         else if (size > MAX_PATH) {
             buffer.resize(size, '\0');
-            if (size == GetWindowsDirectoryW(buffer.data(), size)) {
+            UINT ret = GetWindowsDirectoryW(buffer.data(), size);
+            if (ret > 0 && ret < size) {
                 return std::filesystem::path(buffer.data()) / L"INF";
             }
         }
@@ -52,7 +53,8 @@ namespace VInput::Win32 {
         }
         else if (size > MAX_PATH) {
             buffer.resize(size, '\0');
-            if (size == GetSystemDirectoryW(buffer.data(), size)) {
+            UINT ret = GetSystemDirectoryW(buffer.data(), size);
+            if (ret > 0 && ret < size) {
                 return std::filesystem::path(buffer.data());
             }
         }
@@ -240,8 +242,10 @@ namespace VInput::Win32 {
         }
 
         const auto parent = path.parent_path();
-        if (parent.empty()) {
-            if (!std::filesystem::create_directories(parent)) {
+        if (!parent.empty()) {
+            std::error_code ec;
+            std::filesystem::create_directories(parent, ec);
+            if (ec) {
                 return false;
             }
         }
@@ -410,12 +414,10 @@ namespace VInput::Win32 {
         return buf.data();
     }
 
-    std::vector<std::wstring> GetDeviceInterfacePaths(const GUID& guid) {
-        std::vector<std::wstring> paths;
-
-        VInput::Win32::DevInfoSet deviceInfoSet(SetupDiGetClassDevsW(&guid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE));
-        if (!deviceInfoSet.valid())
-            return paths;
+    std::wstring GetDeviceInterfacePath(const GUID& guid, const std::wstring_view filterPrefix) {
+        auto deviceInfoSet = VInput::Win32::SafePtr<HDEVINFO, SetupDiDestroyDeviceInfoList>{ SetupDiGetClassDevsW(&guid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE) };
+        if (!deviceInfoSet)
+            return {};
 
         for (DWORD index = 0;; ++index) {
             SP_DEVICE_INTERFACE_DATA interfaceData{};
@@ -436,13 +438,11 @@ namespace VInput::Win32 {
             if (!SetupDiGetDeviceInterfaceDetailW(deviceInfoSet.get(), &interfaceData, detail, requiredSize, nullptr, nullptr))
                 continue;
 
-            const std::wstring path(detail->DevicePath);
-
-            if (!VInput::String::ContainsIgnoreCase(paths, path))
-                paths.push_back(path);
+            if (VInput::String::StartsWithIgnoreCase(detail->DevicePath, filterPrefix))
+                return detail->DevicePath;
         }
 
-        return paths;
+        return {};
     }
 
     static std::vector<std::wstring> GetMultiSzProperty(HDEVINFO set, SP_DEVINFO_DATA& data, DWORD prop) {
@@ -513,7 +513,7 @@ namespace VInput::Win32 {
         std::vector<wchar_t> buffer(listSize);
         if (CM_Get_Device_ID_ListW(nullptr, buffer.data(), listSize, CM_GETIDLIST_FILTER_PRESENT) != CR_SUCCESS)
             return false;
-
+        std::wstring targetId(targetHwId);
         for (wchar_t* instanceId = buffer.data(); *instanceId; instanceId += wcslen(instanceId) + 1) {
             if (!filterInstanceId.empty()) {
                 if (!VInput::String::StartsWithIgnoreCase(instanceId, filterInstanceId))
@@ -542,7 +542,7 @@ namespace VInput::Win32 {
 
             wchar_t* p = reinterpret_cast<wchar_t*>(propBuffer.data());
             while (*p) {
-                if (wcscmp(p, targetHwId.data()) == 0) {
+                if (wcscmp(p, targetId.c_str()) == 0) {
                     return true;
                 }
                 p += wcslen(p) + 1;
@@ -579,9 +579,9 @@ namespace VInput::Win32 {
             return r;
         }
 
-        DevInfoSet set(SetupDiCreateDeviceInfoList(&classGuid, nullptr));
+        auto set = VInput::Win32::SafePtr<HDEVINFO, SetupDiDestroyDeviceInfoList>{ SetupDiCreateDeviceInfoList(&classGuid, nullptr) };
 
-        if (!set.valid()) {
+        if (!set) {
             MakeResult(r, false, GetLastError());
             return r;
         }
@@ -616,6 +616,7 @@ namespace VInput::Win32 {
             MakeResult(r, false, installError, reboot || undoReboot);
             return r;
         }
+        r.needReboot = reboot;
         return r;
     }
 
@@ -644,8 +645,8 @@ namespace VInput::Win32 {
         }
 
         for (const auto& id : instances) {
-            DevInfoSet one(SetupDiCreateDeviceInfoList(nullptr, nullptr));
-            if (!one.valid()) {
+            auto one = VInput::Win32::SafePtr<HDEVINFO, SetupDiDestroyDeviceInfoList>{ SetupDiCreateDeviceInfoList(nullptr, nullptr) };
+            if (!one) {
                 DWORD e = GetLastError();
                 MakeResult(r, false, e);
                 continue;

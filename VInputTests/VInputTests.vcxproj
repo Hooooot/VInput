@@ -140,6 +140,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\VInput\Api.cpp" />
     <ClCompile Include="..\VInput\Common.cpp" />
     <ClCompile Include="..\VInput\InfHelper.cpp" />
     <ClCompile Include="..\VInput\LgDevice.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="VInputTests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\VInput\Api.h" />
     <ClInclude Include="..\VInput\Common.h" />
     <ClInclude Include="..\VInput\framework.h" />
     <ClInclude Include="..\VInput\InfHelper.h" />

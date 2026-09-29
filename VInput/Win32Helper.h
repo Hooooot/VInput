@@ -8,6 +8,9 @@
 #include <SetupAPI.h>
 #include <functional>
 #include <iostream>
+#include <windows.h>
+#include <memory>
+#include <utility>
 
 namespace VInput::Win32 {
 	enum DriverErrorStatus : int
@@ -18,19 +21,52 @@ namespace VInput::Win32 {
 		DRIVER_INCOMPATIBLE,
 	};
 
-	class DevInfoSet {
+	template <typename T, auto Deleter>
+	class SafePtr
+	{
 	public:
-		explicit DevInfoSet(HDEVINFO h = INVALID_HANDLE_VALUE) : h_(h) {}
-		~DevInfoSet() {
-			if (h_ != INVALID_HANDLE_VALUE)
-				SetupDiDestroyDeviceInfoList(h_);
+		SafePtr() noexcept = default;
+		explicit SafePtr(T ptr) noexcept : m_ptr(ptr) {}
+		~SafePtr() noexcept { reset(); }
+
+		SafePtr(const SafePtr&) = delete;
+		SafePtr& operator=(const SafePtr&) = delete;
+
+		SafePtr(SafePtr&& o) noexcept
+			: m_ptr(std::exchange(o.m_ptr, nullptr)) {
 		}
-		DevInfoSet(const DevInfoSet&) = delete;
-		DevInfoSet& operator=(const DevInfoSet&) = delete;
-		HDEVINFO get() const { return h_; }
-		bool valid() const { return h_ != INVALID_HANDLE_VALUE; }
+
+		SafePtr& operator=(SafePtr&& o) noexcept
+		{
+			if (this != &o)
+				reset(std::exchange(o.m_ptr, nullptr));
+			return *this;
+		}
+
+		[[nodiscard]] T get() const noexcept { return m_ptr; }
+
+		[[nodiscard]] explicit operator bool() const noexcept
+		{
+			return m_ptr != nullptr && m_ptr != (T)INVALID_HANDLE_VALUE;
+		}
+
+		[[nodiscard]] T release() noexcept
+		{
+			return std::exchange(m_ptr, nullptr);
+		}
+
+		void reset(T ptr = nullptr) noexcept
+		{
+			if (ptr != m_ptr)
+			{
+				if (m_ptr != nullptr && m_ptr != (T)INVALID_HANDLE_VALUE)
+					Deleter(m_ptr);
+				m_ptr = ptr;
+			}
+		}
+
 	private:
-		HDEVINFO h_;
+		T m_ptr = nullptr;
 	};
 
 	struct Win32Result {
@@ -74,7 +110,7 @@ namespace VInput::Win32 {
 	int Exec(const std::wstring& command, std::wstring* exec_stdout);
 	HMODULE GetSelfModule();
 	bool WriteResourceToFile(HMODULE mod, int resId, const std::filesystem::path& path);
-	std::vector<std::wstring> GetDeviceInterfacePaths(const GUID& guid);
+	std::wstring GetDeviceInterfacePath(const GUID& guid, const std::wstring_view filterPrefix);
 	/// <summary>
 	/// 
 	/// </summary>

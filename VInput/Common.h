@@ -17,6 +17,44 @@ constexpr uint8_t kUsbMouseBack = 0x08;
 constexpr uint8_t kUsbMouseForward = 0x10;
 
 namespace VInput {
+
+#pragma pack(push, 1)
+    struct MouseInputReport
+    {
+        std::uint8_t buttons;
+        std::int8_t x;
+        std::int8_t y;
+        std::int8_t wheel;
+        std::int8_t horizontalWheel;
+    };
+
+    struct KeyboardInputReport {
+        uint8_t modifiers;  // byte 0: LCTRL=1, LSHIFT=2, LALT=4, LWIN=8,
+        // RCTRL=16, RSHIFT=32, RALT=64, RWIN=128
+        uint8_t reserved;   // byte 1: always 0 (HID spec)
+        uint8_t key0;       // bytes 2..7: HID Usage id (a=0x04, ..., f1=0x3A, ...)
+        uint8_t key1;		// see HID Keyboard/KeypadPage(0x07)
+        uint8_t key2;
+        uint8_t key3;
+        uint8_t key4;
+        uint8_t key5;
+    };
+
+#pragma pack(pop)
+
+    enum class MouseButton : std::uint8_t
+    {
+        None = 0x00,
+        Left = 0x01,
+        Right = 0x02,
+        Middle = 0x04,
+        X1 = 0x08,
+        X2 = 0x10,
+        Button6 = 0x20,
+        Button7 = 0x40,
+        Button8 = 0x80
+    };
+
     enum CurrentUsingVender {
         Unknown,
         Logitech,

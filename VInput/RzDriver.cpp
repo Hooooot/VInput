@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "RzDriver.h"
+#include "RzDevice.h"
 #include "StopwatchHelper.h"
 #include "StringHelper.h"
 #include "InfHelper.h"
@@ -15,9 +16,6 @@ namespace VInput::Rz {
     constexpr std::wstring_view kRzVirtualDeviceId = L"RAZER\\VirtualBus\\VID_1532&PID_0306";
 
     constexpr std::wstring_view mouseHardwareId = L"HID\\VID_1532&PID_0306&MI_00&Col01";
-
-    constexpr GUID GUID_RZ_CONTROL_INTERFACE = { 0xE3BE005D, 0xD130, 0x4910, {0x88, 0xFF, 0x09, 0xAE, 0x02, 0xF6, 0x80, 0xE9} };
-
 
     static std::filesystem::path ReleaseBuildinDriver() {
         constexpr std::pair<int, const wchar_t*> driverFiles[] = {
@@ -71,7 +69,7 @@ namespace VInput::Rz {
 
     static bool IsDriverReady()
     {
-        return VInput::Win32::GetDeviceInterfacePaths(GUID_RZ_CONTROL_INTERFACE).size() > 0;
+        return !VInput::Win32::GetDeviceInterfacePath(GUID_RZ_CONTROL_INTERFACE, RZ_CONTROL_INTERFACE_PATH).empty();
     }
 
     static int InternalUninstall(const std::wstring& vbusInf, const std::wstring& vconInf,
@@ -90,7 +88,7 @@ namespace VInput::Rz {
                 break;
         } while (IsDriverReady());
         stop.Stop();
-        //std::wcout << std::format(L"IsDriverReady 耗时: {:.3f} ms\n", stop.ElapsedMilliseconds());
+        std::wcout << std::format(L"IsDriverReady 耗时: {:.3f} ms\n", stop.ElapsedMilliseconds());
 
         if (!kbdInf.empty())
             MergeResult(VInput::Inf::UninstallInfPackage(kbdInf), r);
@@ -117,11 +115,11 @@ namespace VInput::Rz {
             }
         }
 
-        //std::wcout << L"Uninstall Result: " << (r.success ? L"SUCCESS" : L"FAILED")
-        //    << L" , need reboot: " << (r.needReboot ? L"YES" : L"NO")
-        //    << L" , error code: " << r.error
-        //    << L" , error line: " << r.errorLine
-        //    << L"\n";
+        std::wcout << L"Uninstall Result: " << (r.success ? L"SUCCESS" : L"FAILED")
+            << L" , need reboot: " << (r.needReboot ? L"YES" : L"NO")
+            << L" , error code: " << r.error
+            << L" , error line: " << r.errorLine
+            << L"\n";
         return r.error;
     }
 
@@ -225,14 +223,14 @@ namespace VInput::Rz {
                     break;
             } while (!IsDriverReady());
             stop.Stop();
-            //std::wcout << std::format(L"IsDriverReady 耗时: {:.3f} ms\n", stop.ElapsedMilliseconds());
+            std::wcout << std::format(L"IsDriverReady 耗时: {:.3f} ms\n", stop.ElapsedMilliseconds());
         }
 
-        //std::wcout << L"Install Result: " << (r.success ? L"SUCCESS" : L"FAILED")
-        //    << L" , need reboot: " << (r.needReboot ? L"YES" : L"NO")
-        //    << L" , error code: " << r.error
-        //    << L" , error line: " << r.errorLine
-        //    << L"\n";
+        std::wcout << L"Install Result: " << (r.success ? L"SUCCESS" : L"FAILED")
+            << L" , need reboot: " << (r.needReboot ? L"YES" : L"NO")
+            << L" , error code: " << r.error
+            << L" , error line: " << r.errorLine
+            << L"\n";
         return r.error;
     }
 

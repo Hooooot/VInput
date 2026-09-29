@@ -143,7 +143,6 @@ namespace VInput::Rz {
 
     constexpr uint32_t IOCTL_RZDEV_INPUT = 0x88883020;
 
-    constexpr GUID GUID_RZ_CONTROL_INTERFACE = { 0xE3BE005D, 0xD130, 0x4910, {0x88, 0xFF, 0x09, 0xAE, 0x02, 0xF6, 0x80, 0xE9} };
 
     bool VInput::Rz::RzDevice::Initialize()
     {
@@ -151,16 +150,15 @@ namespace VInput::Rz {
             return true;
 
         // L"\\?\RZCONTROL#VID_1532&PID_0306&MI_00#3&1035b5cf&0#{e3be005d-d130-4910-88ff-09ae02f680e9}"
-        const std::vector<std::wstring> paths = VInput::Win32::GetDeviceInterfacePaths(GUID_RZ_CONTROL_INTERFACE);
-        if (paths.empty())
+        std::wstring path = VInput::Win32::GetDeviceInterfacePath(GUID_RZ_CONTROL_INTERFACE, RZ_CONTROL_INTERFACE_PATH);
+        if (path.empty())
             return false;
-        for (const std::wstring& path : paths) {
-            HANDLE handle = CreateFileW(path.c_str(), GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-            if (handle != INVALID_HANDLE_VALUE)
-            {
-                deviceHandle_ = handle;
-                return true;
-            }
+
+        HANDLE handle = CreateFileW(path.c_str(), GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+        if (handle != INVALID_HANDLE_VALUE)
+        {
+            deviceHandle_ = handle;
+            return true;
         }
         return false;
     }

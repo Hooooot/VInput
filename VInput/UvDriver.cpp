@@ -9,13 +9,11 @@
 
 namespace VInput::Uv {
     // {745A17A0-74D3-11D0-B6FE-00A0C90F57DA}
-    DEFINE_GUID(GUID_UVHID_INTERFACE, 0x745A17A0, 0x74D3, 0x11D0, 0xB6, 0xFE, 0x00, 0xA0, 0xC9, 0x0F, 0x57, 0xDA);
+    //DEFINE_GUID(GUID_UVHID_INTERFACE, 0x745A17A0, 0x74D3, 0x11D0, 0xB6, 0xFE, 0x00, 0xA0, 0xC9, 0x0F, 0x57, 0xDA);
 
-    // {4D1E55B2-F16F-11CF-88CB-001111000030}
-    DEFINE_GUID(GUID_UVHID_DEVICE,    0x4D1E55B2, 0xF16F, 0x11CF, 0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30);
     constexpr std::wstring_view kRootDeviceInstanceId = L"ROOT\\uvhid";
     constexpr std::wstring_view kRootDeviceHardwareId = L"HID\\uvhid";
-    constexpr std::wstring_view mouseHardwareId = L"HID\\UVHID&Col01";
+    constexpr std::wstring_view controllerHardwareId = L"HID\\UVHID&Col01";
 
 
     static std::filesystem::path ReleaseBuildinDriver() {
@@ -69,7 +67,7 @@ namespace VInput::Uv {
 
     static bool IsDriverReady()
     {
-        return VInput::Win32::IsDeviceExists(mouseHardwareId, mouseHardwareId.substr(0, 13));
+        return VInput::Win32::IsDeviceExists(controllerHardwareId, controllerHardwareId);
     }
 
     VInput::Win32::DriverErrorStatus UvDriver::GetDriverStatus()

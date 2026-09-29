@@ -6,6 +6,9 @@
 
 namespace VInput::Rz {
 
+	constexpr GUID GUID_RZ_CONTROL_INTERFACE = { 0xE3BE005D, 0xD130, 0x4910, {0x88, 0xFF, 0x09, 0xAE, 0x02, 0xF6, 0x80, 0xE9} };
+	constexpr std::wstring_view RZ_CONTROL_INTERFACE_PATH = L"\\\\?\\RZCONTROL#VID_1532&PID_0306";
+
 	enum class RzInputType : std::uint32_t {
 		Keyboard = 1,
 		Mouse = 2
@@ -27,8 +30,6 @@ namespace VInput::Rz {
 	};
 
 	class RzDevice : public VInput::AbsDevice {
-
-
 	public:
 		RzDevice() {}
 		~RzDevice() {
