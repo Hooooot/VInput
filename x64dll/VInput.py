@@ -3,7 +3,7 @@
 #
 # Version    : 2.0.0.0
 # Source     : Api.h
-# Generated  : 2026-09-30 02:10:09
+# Generated  : 2026-09-30 02:29:46
 # Generator  : gen_vinput_py.ps1
 # Platform   : Windows x64 only
 #
@@ -12,7 +12,7 @@
 # =============================================================================
 
 import ctypes
-from ctypes import c_bool, c_int, c_byte, c_char_p, c_void_p
+from ctypes import c_int, c_byte, c_char_p, c_void_p
 import os
 
 __version__ = "2.0.0.0"
@@ -180,45 +180,45 @@ def _declare_funcs(dll):
         return
 
     dll.Initialize.argtypes = [c_char_p]
-    dll.Initialize.restype = c_bool
+    dll.Initialize.restype = c_int
     dll.InitializeRazer.argtypes = [c_char_p]
-    dll.InitializeRazer.restype = c_bool
+    dll.InitializeRazer.restype = c_int
     dll.InitializeLogitech.argtypes = [c_char_p]
-    dll.InitializeLogitech.restype = c_bool
+    dll.InitializeLogitech.restype = c_int
     dll.InitializeUvhid.argtypes = [c_char_p]
-    dll.InitializeUvhid.restype = c_bool
+    dll.InitializeUvhid.restype = c_int
     dll.MouseMove.argtypes = [c_int, c_int]
-    dll.MouseMove.restype = c_bool
+    dll.MouseMove.restype = c_int
     dll.MouseMoveTo.argtypes = [c_int, c_int]
-    dll.MouseMoveTo.restype = c_bool
+    dll.MouseMoveTo.restype = c_int
     dll.MousePress.argtypes = [c_byte]
-    dll.MousePress.restype = c_bool
+    dll.MousePress.restype = c_int
     dll.MouseRelease.argtypes = [c_byte]
-    dll.MouseRelease.restype = c_bool
+    dll.MouseRelease.restype = c_int
     dll.MouseClick.argtypes = [c_byte]
-    dll.MouseClick.restype = c_bool
+    dll.MouseClick.restype = c_int
     dll.MouseMoveToClick.argtypes = [c_int, c_int, c_byte]
-    dll.MouseMoveToClick.restype = c_bool
+    dll.MouseMoveToClick.restype = c_int
     dll.MouseWheel.argtypes = [c_byte]
-    dll.MouseWheel.restype = c_bool
+    dll.MouseWheel.restype = c_int
     dll.MouseHorizontalWheel.argtypes = [c_byte]
-    dll.MouseHorizontalWheel.restype = c_bool
+    dll.MouseHorizontalWheel.restype = c_int
     dll.MouseReleaseAll.argtypes = []
-    dll.MouseReleaseAll.restype = c_bool
+    dll.MouseReleaseAll.restype = c_int
     dll.KeyboardPress.argtypes = [c_byte]
-    dll.KeyboardPress.restype = c_bool
+    dll.KeyboardPress.restype = c_int
     dll.KeyboardRelease.argtypes = [c_byte]
-    dll.KeyboardRelease.restype = c_bool
+    dll.KeyboardRelease.restype = c_int
     dll.KeyboardClick.argtypes = [c_byte]
-    dll.KeyboardClick.restype = c_bool
+    dll.KeyboardClick.restype = c_int
     dll.KeyboardPressHID.argtypes = [c_byte]
-    dll.KeyboardPressHID.restype = c_bool
+    dll.KeyboardPressHID.restype = c_int
     dll.KeyboardReleaseHID.argtypes = [c_byte]
-    dll.KeyboardReleaseHID.restype = c_bool
+    dll.KeyboardReleaseHID.restype = c_int
     dll.KeyboardClickHID.argtypes = [c_byte]
-    dll.KeyboardClickHID.restype = c_bool
+    dll.KeyboardClickHID.restype = c_int
     dll.KeyboardReleaseAll.argtypes = []
-    dll.KeyboardReleaseAll.restype = c_bool
+    dll.KeyboardReleaseAll.restype = c_int
     dll.Shutdown.argtypes = []
     dll.Shutdown.restype = None
     _funcs_declared = True
@@ -237,7 +237,7 @@ def initialize(driverPath=None):
     """
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.Initialize(driverPath.encode('utf-8') if isinstance(driverPath, str) else driverPath)
+    return bool(dll.Initialize(driverPath.encode('utf-8') if isinstance(driverPath, str) else driverPath))
 
 # DLLAPI BOOL STDCALL InitializeRazer(UTF8_STRING driverPath);
 def initialize_razer(driverPath=None):
@@ -249,7 +249,7 @@ def initialize_razer(driverPath=None):
     """
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.InitializeRazer(driverPath.encode('utf-8') if isinstance(driverPath, str) else driverPath)
+    return bool(dll.InitializeRazer(driverPath.encode('utf-8') if isinstance(driverPath, str) else driverPath))
 
 # DLLAPI BOOL STDCALL InitializeLogitech(UTF8_STRING driverPath);
 def initialize_logitech(driverPath=None):
@@ -261,7 +261,7 @@ def initialize_logitech(driverPath=None):
     """
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.InitializeLogitech(driverPath.encode('utf-8') if isinstance(driverPath, str) else driverPath)
+    return bool(dll.InitializeLogitech(driverPath.encode('utf-8') if isinstance(driverPath, str) else driverPath))
 
 # DLLAPI BOOL STDCALL InitializeUvhid(UTF8_STRING driverPath);
 def initialize_uvhid(driverPath=None):
@@ -273,49 +273,49 @@ def initialize_uvhid(driverPath=None):
     """
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.InitializeUvhid(driverPath.encode('utf-8') if isinstance(driverPath, str) else driverPath)
+    return bool(dll.InitializeUvhid(driverPath.encode('utf-8') if isinstance(driverPath, str) else driverPath))
 
 # DLLAPI BOOL STDCALL MouseMove(INT32 dx, INT32 dy);
 def mouse_move(dx, dy):
     """MouseMove"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.MouseMove(c_int(dx), c_int(dy))
+    return bool(dll.MouseMove(c_int(dx), c_int(dy)))
 
 # DLLAPI BOOL STDCALL MouseMoveTo(INT32 x, INT32 y);
 def mouse_move_to(x, y):
     """MouseMoveTo"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.MouseMoveTo(c_int(x), c_int(y))
+    return bool(dll.MouseMoveTo(c_int(x), c_int(y)))
 
 # DLLAPI BOOL STDCALL MousePress(UINT8 vk_button);
 def mouse_press(vk_button):
     """MousePress"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.MousePress(c_byte(vk_button))
+    return bool(dll.MousePress(c_byte(vk_button)))
 
 # DLLAPI BOOL STDCALL MouseRelease(UINT8 vk_button);
 def mouse_release(vk_button):
     """MouseRelease"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.MouseRelease(c_byte(vk_button))
+    return bool(dll.MouseRelease(c_byte(vk_button)))
 
 # DLLAPI BOOL STDCALL MouseClick(UINT8 vk_button);
 def mouse_click(vk_button):
     """MouseClick"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.MouseClick(c_byte(vk_button))
+    return bool(dll.MouseClick(c_byte(vk_button)))
 
 # DLLAPI BOOL STDCALL MouseMoveToClick(INT32 x, INT32 y, UINT8 vk_button);
 def mouse_move_to_click(x, y, vk_button):
     """MouseMoveToClick"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.MouseMoveToClick(c_int(x), c_int(y), c_byte(vk_button))
+    return bool(dll.MouseMoveToClick(c_int(x), c_int(y), c_byte(vk_button)))
 
 # DLLAPI BOOL STDCALL MouseWheel(INT8 delta);
 def mouse_wheel(delta):
@@ -326,7 +326,7 @@ def mouse_wheel(delta):
     """
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.MouseWheel(c_byte(delta))
+    return bool(dll.MouseWheel(c_byte(delta)))
 
 # DLLAPI BOOL STDCALL MouseHorizontalWheel(INT8 horizontalDelta);
 def mouse_horizontal_wheel(horizontalDelta):
@@ -337,63 +337,63 @@ def mouse_horizontal_wheel(horizontalDelta):
     """
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.MouseHorizontalWheel(c_byte(horizontalDelta))
+    return bool(dll.MouseHorizontalWheel(c_byte(horizontalDelta)))
 
 # DLLAPI BOOL STDCALL MouseReleaseAll(void);
 def mouse_release_all():
     """MouseReleaseAll"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.MouseReleaseAll()
+    return bool(dll.MouseReleaseAll())
 
 # DLLAPI BOOL STDCALL KeyboardPress(UINT8 vk_key);
 def keyboard_press(vk_key):
     """KeyboardPress"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.KeyboardPress(c_byte(vk_key))
+    return bool(dll.KeyboardPress(c_byte(vk_key)))
 
 # DLLAPI BOOL STDCALL KeyboardRelease(UINT8 vk_key);
 def keyboard_release(vk_key):
     """KeyboardRelease"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.KeyboardRelease(c_byte(vk_key))
+    return bool(dll.KeyboardRelease(c_byte(vk_key)))
 
 # DLLAPI BOOL STDCALL KeyboardClick(UINT8 vk_key);
 def keyboard_click(vk_key):
     """KeyboardClick"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.KeyboardClick(c_byte(vk_key))
+    return bool(dll.KeyboardClick(c_byte(vk_key)))
 
 # DLLAPI BOOL STDCALL KeyboardPressHID(UINT8 page07_usage);
 def keyboard_press_hid(page07_usage):
     """KeyboardPressHID"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.KeyboardPressHID(c_byte(page07_usage))
+    return bool(dll.KeyboardPressHID(c_byte(page07_usage)))
 
 # DLLAPI BOOL STDCALL KeyboardReleaseHID(UINT8 page07_usage);
 def keyboard_release_hid(page07_usage):
     """KeyboardReleaseHID"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.KeyboardReleaseHID(c_byte(page07_usage))
+    return bool(dll.KeyboardReleaseHID(c_byte(page07_usage)))
 
 # DLLAPI BOOL STDCALL KeyboardClickHID(UINT8 page07_usage);
 def keyboard_click_hid(page07_usage):
     """KeyboardClickHID"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.KeyboardClickHID(c_byte(page07_usage))
+    return bool(dll.KeyboardClickHID(c_byte(page07_usage)))
 
 # DLLAPI BOOL STDCALL KeyboardReleaseAll(void);
 def keyboard_release_all():
     """KeyboardReleaseAll"""
     dll = _load_dll()
     _declare_funcs(dll)
-    return dll.KeyboardReleaseAll()
+    return bool(dll.KeyboardReleaseAll())
 
 # DLLAPI void STDCALL Shutdown(void);
 def shutdown():
