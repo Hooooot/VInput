@@ -174,6 +174,10 @@ Keyboard event
 #endif
 #endif
 
+#ifndef NULLABLE
+#define NULLABLE
+#endif
+
 typedef int                 BOOL;
 typedef const char*		    UTF8_STRING;
 typedef signed int		    INT32;
@@ -189,25 +193,25 @@ extern "C" {
     /// </summary>
     /// <param name="driverPath">nullptr(0 or None): use the built-in driver in the DLL.</param>
     /// <returns></returns>
-    DLLAPI BOOL STDCALL Initialize(UTF8_STRING driverPath);
+    DLLAPI BOOL STDCALL Initialize(NULLABLE UTF8_STRING driverPath);
     /// <summary>
     /// install and initizlize the Razer driver and device environment. It should be called every time the DLL is loaded.
     /// </summary>
     /// <param name="driverPath">nullptr(0 or None): use the built-in driver in the DLL.</param>
     /// <returns></returns>
-    DLLAPI BOOL STDCALL InitializeRazer(UTF8_STRING driverPath);
+    DLLAPI BOOL STDCALL InitializeRazer(NULLABLE UTF8_STRING driverPath);
     /// <summary>
     /// install and initizlize the Logitech driver and device environment. It should be called every time the DLL is loaded.
     /// </summary>
     /// <param name="driverPath">nullptr(0 or None): use the built-in driver in the DLL.</param>
     /// <returns></returns>
-    DLLAPI BOOL STDCALL InitializeLogitech(UTF8_STRING driverPath);
+    DLLAPI BOOL STDCALL InitializeLogitech(NULLABLE UTF8_STRING driverPath);
     /// <summary>
     /// install and initizlize the uvhid driver and device environment. It should be called every time the DLL is loaded.
     /// </summary>
     /// <param name="driverPath">nullptr(0 or None): use the built-in driver in the DLL.</param>
     /// <returns></returns>
-    DLLAPI BOOL STDCALL InitializeUvhid(UTF8_STRING driverPath);
+    DLLAPI BOOL STDCALL InitializeUvhid(NULLABLE UTF8_STRING driverPath);
 
     DLLAPI BOOL STDCALL MouseMove(INT32 dx, INT32 dy);
     DLLAPI BOOL STDCALL MouseMoveTo(INT32 x, INT32 y);

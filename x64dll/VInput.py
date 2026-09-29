@@ -3,7 +3,7 @@
 #
 # Version    : 2.0.0.0
 # Source     : Api.h
-# Generated  : 2026-09-30 01:52:05
+# Generated  : 2026-09-30 02:10:09
 # Generator  : gen_vinput_py.ps1
 # Platform   : Windows x64 only
 #
@@ -228,7 +228,7 @@ def _declare_funcs(dll):
 # =============================================================================
 
 # DLLAPI BOOL STDCALL Initialize(UTF8_STRING driverPath);
-def initialize(driverPath):
+def initialize(driverPath=None):
     """
     install and initizlize the available driver and device environment. It should be called every time the DLL is loaded.
 
@@ -240,7 +240,7 @@ def initialize(driverPath):
     return dll.Initialize(driverPath.encode('utf-8') if isinstance(driverPath, str) else driverPath)
 
 # DLLAPI BOOL STDCALL InitializeRazer(UTF8_STRING driverPath);
-def initialize_razer(driverPath):
+def initialize_razer(driverPath=None):
     """
     install and initizlize the Razer driver and device environment. It should be called every time the DLL is loaded.
 
@@ -252,7 +252,7 @@ def initialize_razer(driverPath):
     return dll.InitializeRazer(driverPath.encode('utf-8') if isinstance(driverPath, str) else driverPath)
 
 # DLLAPI BOOL STDCALL InitializeLogitech(UTF8_STRING driverPath);
-def initialize_logitech(driverPath):
+def initialize_logitech(driverPath=None):
     """
     install and initizlize the Logitech driver and device environment. It should be called every time the DLL is loaded.
 
@@ -264,7 +264,7 @@ def initialize_logitech(driverPath):
     return dll.InitializeLogitech(driverPath.encode('utf-8') if isinstance(driverPath, str) else driverPath)
 
 # DLLAPI BOOL STDCALL InitializeUvhid(UTF8_STRING driverPath);
-def initialize_uvhid(driverPath):
+def initialize_uvhid(driverPath=None):
     """
     install and initizlize the uvhid driver and device environment. It should be called every time the DLL is loaded.
 

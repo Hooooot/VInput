@@ -75,7 +75,7 @@ public:
 static Manager manager{};
 
 
-DLLAPI BOOL STDCALL Initialize(UTF8_STRING driverPath)
+DLLAPI BOOL STDCALL Initialize(NULLABLE UTF8_STRING driverPath)
 {
     if (manager.InitializeDevice<VInput::Lg::LgDriver, VInput::Lg::LgDevice>(driverPath))
         return true;
@@ -89,17 +89,17 @@ DLLAPI BOOL STDCALL Initialize(UTF8_STRING driverPath)
 	return false;
 }
 
-DLLAPI BOOL STDCALL InitializeRazer(UTF8_STRING driverPath)
+DLLAPI BOOL STDCALL InitializeRazer(NULLABLE UTF8_STRING driverPath)
 {
     return manager.InitializeDevice<VInput::Lg::LgDriver, VInput::Lg::LgDevice>(driverPath);
 }
 
-DLLAPI BOOL STDCALL InitializeLogitech(UTF8_STRING driverPath)
+DLLAPI BOOL STDCALL InitializeLogitech(NULLABLE UTF8_STRING driverPath)
 {
     return manager.InitializeDevice<VInput::Rz::RzDriver, VInput::Rz::RzDevice>(driverPath);
 }
 
-DLLAPI BOOL STDCALL InitializeUvhid(UTF8_STRING driverPath)
+DLLAPI BOOL STDCALL InitializeUvhid(NULLABLE UTF8_STRING driverPath)
 {
     return manager.InitializeDevice<VInput::Uv::UvDriver, VInput::Uv::UvDevice>(driverPath);
 }
