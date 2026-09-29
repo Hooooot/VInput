@@ -50,8 +50,6 @@ if errorlevel 1 (
     goto :fail
 )
 
-if errorlevel 1 goto :fail
-if errorlevel 1 goto :fail
 echo Build succeeded.
 pause
 exit /b 0
